@@ -133,14 +133,14 @@ export default function Products() {
       <div className="space-y-3">
         <Label className="text-base font-semibold">Minimum Rating</Label>
         <Select
-          value={ratingFilter?.toString() || ''}
-          onValueChange={(value) => setRatingFilter(value ? parseFloat(value) : null)}
+          value={ratingFilter?.toString() || 'all'}
+          onValueChange={(value) => setRatingFilter(value === 'all' ? null : parseFloat(value))}
         >
           <SelectTrigger>
             <SelectValue placeholder="Any rating" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Any rating</SelectItem>
+            <SelectItem value="all">Any rating</SelectItem>
             <SelectItem value="4">4+ stars</SelectItem>
             <SelectItem value="3">3+ stars</SelectItem>
             <SelectItem value="2">2+ stars</SelectItem>
