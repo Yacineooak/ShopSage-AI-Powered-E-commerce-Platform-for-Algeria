@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Search, ShoppingCart, User, Menu, X, Sun, Moon, Globe, Heart } from 'lucide-react';
 import { useCartStore } from '../../lib/stores/cart-store';
 import { useWishlistStore } from '../../lib/stores/wishlist-store';
 import { useAppStore } from '../../lib/stores/app-store';
+import { SmartSearch } from '../search/SmartSearch';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 import {
