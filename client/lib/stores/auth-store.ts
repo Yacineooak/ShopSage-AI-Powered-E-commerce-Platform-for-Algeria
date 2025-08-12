@@ -44,7 +44,7 @@ const mockUsers: User[] = [
     id: '1',
     email: 'admin@shopsage.com',
     name: 'Admin User',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face&auto=format&q=80',
     role: 'admin',
     preferences: {
       theme: 'light',
