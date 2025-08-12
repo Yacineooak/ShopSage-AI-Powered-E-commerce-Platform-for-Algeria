@@ -71,18 +71,14 @@ export function Header() {
           </Link>
         </nav>
 
-        {/* Search Bar */}
+        {/* Smart Search Bar */}
         <div className="hidden lg:flex flex-1 max-w-sm mx-8">
-          <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-            <Input
-              type="text"
-              placeholder="Search products..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 pr-4"
-            />
-          </div>
+          <SmartSearch
+            className="w-full"
+            placeholder="Search products..."
+            onSelectProduct={handleProductSelect}
+            onSearch={handleSearch}
+          />
         </div>
 
         {/* Right Side Actions */}
