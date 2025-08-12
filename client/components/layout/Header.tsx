@@ -28,6 +28,14 @@ export function Header() {
     setTheme(theme === 'light' ? 'dark' : 'light');
   };
 
+  const handleProductSelect = (productId: string) => {
+    navigate(`/product/${productId}`);
+  };
+
+  const handleSearch = (query: string) => {
+    navigate('/products');
+  };
+
   const languages = [
     { code: 'en', name: 'English' },
     { code: 'fr', name: 'Français' },
