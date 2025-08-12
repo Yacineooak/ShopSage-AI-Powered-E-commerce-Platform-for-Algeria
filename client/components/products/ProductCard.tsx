@@ -1,8 +1,9 @@
-import { Star, Heart, ShoppingCart } from 'lucide-react';
+import { Star, Heart, ShoppingCart, RotateCcw } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Product } from '../../lib/stores/cart-store';
 import { useCartStore } from '../../lib/stores/cart-store';
 import { useWishlistStore } from '../../lib/stores/wishlist-store';
+import { useComparisonStore } from '../../lib/stores/comparison-store';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Card, CardContent } from '../ui/card';
