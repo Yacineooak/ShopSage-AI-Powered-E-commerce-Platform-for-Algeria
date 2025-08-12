@@ -15,6 +15,7 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
   const { addItem, currency } = useCartStore();
   const { addItem: addToWishlist, removeItem: removeFromWishlist, isInWishlist } = useWishlistStore();
+  const { addItem: addToComparison, removeItem: removeFromComparison, isInComparison } = useComparisonStore();
 
   const formatPrice = (price: number) => {
     const formatter = new Intl.NumberFormat('en-US', {
