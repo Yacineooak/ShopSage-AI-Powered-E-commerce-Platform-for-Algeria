@@ -16,9 +16,11 @@ import {
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { getTotalItems, setIsOpen } = useCartStore();
+  const { getTotalItems: getWishlistItems } = useWishlistStore();
   const { theme, setTheme, language, setLanguage, searchQuery, setSearchQuery } = useAppStore();
 
   const totalItems = getTotalItems();
+  const wishlistItems = getWishlistItems();
 
   const toggleTheme = () => {
     setTheme(theme === 'light' ? 'dark' : 'light');
