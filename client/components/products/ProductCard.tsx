@@ -56,6 +56,18 @@ export function ProductCard({ product }: ProductCardProps) {
     addItem(product);
   };
 
+  const handleWishlistToggle = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (isInWishlist(product.id)) {
+      removeFromWishlist(product.id);
+    } else {
+      addToWishlist(product);
+    }
+  };
+
+  const inWishlist = isInWishlist(product.id);
+
   return (
     <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 h-full">
       <Link to={`/product/${product.id}`}>
