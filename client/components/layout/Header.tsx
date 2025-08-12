@@ -115,6 +115,18 @@ export function Header() {
             {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
           </Button>
 
+          {/* Comparison */}
+          <Button variant="ghost" size="sm" className="relative" asChild>
+            <Link to="/compare">
+              <RotateCcw className="h-4 w-4" />
+              {comparisonItems > 0 && (
+                <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {comparisonItems}
+                </span>
+              )}
+            </Link>
+          </Button>
+
           {/* Wishlist */}
           <Button variant="ghost" size="sm" className="relative" asChild>
             <Link to="/wishlist">
@@ -128,9 +140,72 @@ export function Header() {
           </Button>
 
           {/* User Account */}
-          <Button variant="ghost" size="sm">
-            <User className="h-4 w-4" />
-          </Button>
+          {isAuthenticated ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm" className="relative">
+                  <Avatar className="h-6 w-6">
+                    <AvatarImage src={user?.avatar} />
+                    <AvatarFallback>
+                      {user?.name?.split(' ').map(n => n[0]).join('').toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <div className="flex items-center space-x-2 p-2">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={user?.avatar} />
+                    <AvatarFallback>
+                      {user?.name?.split(' ').map(n => n[0]).join('').toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex flex-col space-y-1">
+                    <p className="text-sm font-medium">{user?.name}</p>
+                    <p className="text-xs text-muted-foreground">{user?.email}</p>
+                  </div>
+                </div>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link to="/profile">
+                    <User className="mr-2 h-4 w-4" />
+                    Profile
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/orders">
+                    <ShoppingCart className="mr-2 h-4 w-4" />
+                    My Orders
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/settings">
+                    <Settings className="mr-2 h-4 w-4" />
+                    Settings
+                  </Link>
+                </DropdownMenuItem>
+                {user?.role === 'admin' && (
+                  <DropdownMenuItem asChild>
+                    <Link to="/admin">
+                      <Shield className="mr-2 h-4 w-4" />
+                      Admin Dashboard
+                    </Link>
+                  </DropdownMenuItem>
+                )}
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={logout}>
+                  <LogOut className="mr-2 h-4 w-4" />
+                  Logout
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <Button variant="ghost" size="sm" asChild>
+              <Link to="/login">
+                <User className="h-4 w-4" />
+              </Link>
+            </Button>
+          )}
 
           {/* Cart */}
           <Button
