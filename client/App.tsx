@@ -43,6 +43,7 @@ function AppContent() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/help" element={<Help />} />
+          <Route path="/wishlist" element={<Wishlist />} />
           <Route path="/shipping" element={<PlaceholderPage title="Shipping Information" />} />
           <Route path="/returns" element={<PlaceholderPage title="Returns & Exchanges" />} />
           <Route path="/privacy" element={<PlaceholderPage title="Privacy Policy" />} />
