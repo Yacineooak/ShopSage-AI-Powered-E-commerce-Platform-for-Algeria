@@ -92,9 +92,12 @@ export function ProductCard({ product }: ProductCardProps) {
             <Button
               size="sm"
               variant="secondary"
-              className="bg-white/90 text-black hover:bg-white p-2"
+              className={`bg-white/90 hover:bg-white p-2 ${
+                inWishlist ? 'text-red-500' : 'text-black'
+              }`}
+              onClick={handleWishlistToggle}
             >
-              <Heart className="w-4 h-4" />
+              <Heart className={`w-4 h-4 ${inWishlist ? 'fill-red-500' : ''}`} />
             </Button>
           </div>
 
