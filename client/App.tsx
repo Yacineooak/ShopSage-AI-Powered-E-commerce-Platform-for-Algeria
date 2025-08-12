@@ -20,8 +20,12 @@ import Contact from "./pages/Contact";
 import Help from "./pages/Help";
 import Wishlist from "./pages/Wishlist";
 import Shipping from "./pages/Shipping";
+import Compare from "./pages/Compare";
+import Login from "./pages/Login";
+import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
 import PlaceholderPage from "./pages/PlaceholderPage";
+import { PageTransition } from "./components/ui/page-transition";
 
 const queryClient = new QueryClient();
 
