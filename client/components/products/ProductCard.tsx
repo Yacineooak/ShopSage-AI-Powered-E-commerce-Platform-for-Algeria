@@ -7,6 +7,7 @@ import { useComparisonStore } from '../../lib/stores/comparison-store';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { Card, CardContent } from '../ui/card';
+import { ProductImage } from '../ui/image';
 
 interface ProductCardProps {
   product: Product;
