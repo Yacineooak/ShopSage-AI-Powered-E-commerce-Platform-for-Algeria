@@ -40,22 +40,28 @@ function AppContent() {
     <div className="min-h-screen flex flex-col">
       <Header />
       <main className="flex-1">
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/product/:id" element={<ProductDetail />} />
-          <Route path="/categories" element={<Categories />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/help" element={<Help />} />
-          <Route path="/wishlist" element={<Wishlist />} />
-          <Route path="/shipping" element={<Shipping />} />
-          <Route path="/returns" element={<PlaceholderPage title="Returns & Exchanges" />} />
-          <Route path="/privacy" element={<PlaceholderPage title="Privacy Policy" />} />
-          <Route path="/terms" element={<PlaceholderPage title="Terms of Service" />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <PageTransition>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/products" element={<Products />} />
+            <Route path="/product/:id" element={<ProductDetail />} />
+            <Route path="/categories" element={<Categories />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/help" element={<Help />} />
+            <Route path="/wishlist" element={<Wishlist />} />
+            <Route path="/compare" element={<Compare />} />
+            <Route path="/shipping" element={<Shipping />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<PlaceholderPage title="Register" />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/returns" element={<PlaceholderPage title="Returns & Exchanges" />} />
+            <Route path="/privacy" element={<PlaceholderPage title="Privacy Policy" />} />
+            <Route path="/terms" element={<PlaceholderPage title="Terms of Service" />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </PageTransition>
       </main>
       <Footer />
       <CartSidebar />
