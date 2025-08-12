@@ -21,9 +21,12 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@stripe/stripe-js": "^7.8.0",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
-    "zod": "^3.25.76"
+    "react-intersection-observer": "^9.16.0",
+    "zod": "^3.25.76",
+    "zustand": "^5.0.7"
   },
   "devDependencies": {
     "@hookform/resolvers": "^5.2.1",
