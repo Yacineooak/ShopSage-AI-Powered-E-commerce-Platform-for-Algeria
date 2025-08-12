@@ -16,6 +16,7 @@ import {
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
   const { getTotalItems, setIsOpen } = useCartStore();
   const { getTotalItems: getWishlistItems } = useWishlistStore();
   const { theme, setTheme, language, setLanguage, searchQuery, setSearchQuery } = useAppStore();
