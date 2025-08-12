@@ -102,6 +102,18 @@ export function Header() {
             {theme === 'light' ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
           </Button>
 
+          {/* Wishlist */}
+          <Button variant="ghost" size="sm" className="relative" asChild>
+            <Link to="/wishlist">
+              <Heart className="h-4 w-4" />
+              {wishlistItems > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {wishlistItems}
+                </span>
+              )}
+            </Link>
+          </Button>
+
           {/* User Account */}
           <Button variant="ghost" size="sm">
             <User className="h-4 w-4" />
