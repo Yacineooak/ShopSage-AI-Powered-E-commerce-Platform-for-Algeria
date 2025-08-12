@@ -35,7 +35,7 @@ export function CategoriesSection() {
               <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 group-hover:scale-105">
                 <CardContent className="p-0">
                   <div className="relative">
-                    <img
+                    <Image
                       src={categoryImages[category.id as keyof typeof categoryImages]}
                       alt={category.name}
                       className="w-full h-32 object-cover group-hover:scale-110 transition-transform duration-300"
