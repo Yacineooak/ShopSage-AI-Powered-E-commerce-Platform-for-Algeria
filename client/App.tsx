@@ -35,7 +35,7 @@ function AppContent() {
           <Route path="/" element={<Index />} />
           <Route path="/products" element={<Products />} />
           <Route path="/product/:id" element={<ProductDetail />} />
-          <Route path="/categories" element={<PlaceholderPage title="Categories" />} />
+          <Route path="/categories" element={<Categories />} />
           <Route path="/about" element={<PlaceholderPage title="About Us" />} />
           <Route path="/contact" element={<PlaceholderPage title="Contact" />} />
           <Route path="/help" element={<PlaceholderPage title="Help Center" />} />
