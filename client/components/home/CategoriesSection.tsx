@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { categories } from '../../lib/data/products';
 import { Card, CardContent } from '../ui/card';
+import { Image } from '../ui/image';
 
 const categoryImages = {
   electronics: 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=400&h=300&fit=crop&auto=format&q=80',
