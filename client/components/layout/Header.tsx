@@ -1,16 +1,20 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, ShoppingCart, User, Menu, X, Sun, Moon, Globe, Heart } from 'lucide-react';
+import { Search, ShoppingCart, User, Menu, X, Sun, Moon, Globe, Heart, RotateCcw, LogOut, Settings, Shield } from 'lucide-react';
 import { useCartStore } from '../../lib/stores/cart-store';
 import { useWishlistStore } from '../../lib/stores/wishlist-store';
+import { useComparisonStore } from '../../lib/stores/comparison-store';
+import { useAuthStore } from '../../lib/stores/auth-store';
 import { useAppStore } from '../../lib/stores/app-store';
 import { SmartSearch } from '../search/SmartSearch';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
+import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 
