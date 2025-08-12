@@ -34,10 +34,42 @@ const queryClient = new QueryClient();
 
 function AppContent() {
   const { theme } = useAppStore();
+  const location = useLocation();
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', theme === 'dark');
   }, [theme]);
+
+  // Don't show FAB on certain pages
+  const hideFABPages = ['/login', '/register', '/admin'];
+  const showFAB = !hideFABPages.includes(location.pathname);
+
+  const floatingActions = [
+    {
+      icon: MessageSquare,
+      label: 'Live Chat',
+      onClick: () => alert('Live chat feature coming soon!'),
+      color: 'bg-blue-600'
+    },
+    {
+      icon: Phone,
+      label: 'Call Support',
+      onClick: () => window.open('tel:+15551234567'),
+      color: 'bg-green-600'
+    },
+    {
+      icon: HelpCircle,
+      label: 'Help Center',
+      onClick: () => window.location.href = '/help',
+      color: 'bg-orange-600'
+    },
+    {
+      icon: Headphones,
+      label: 'Contact Us',
+      onClick: () => window.location.href = '/contact',
+      color: 'bg-purple-600'
+    }
+  ];
 
   return (
     <div className="min-h-screen flex flex-col">
