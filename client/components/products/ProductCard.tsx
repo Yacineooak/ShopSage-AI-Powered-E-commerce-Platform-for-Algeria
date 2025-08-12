@@ -68,7 +68,18 @@ export function ProductCard({ product }: ProductCardProps) {
     }
   };
 
+  const handleComparisonToggle = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (isInComparison(product.id)) {
+      removeFromComparison(product.id);
+    } else {
+      addToComparison(product);
+    }
+  };
+
   const inWishlist = isInWishlist(product.id);
+  const inComparison = isInComparison(product.id);
 
   return (
     <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 h-full">
