@@ -112,6 +112,16 @@ export function ProductCard({ product }: ProductCardProps) {
             >
               <Heart className={`w-4 h-4 ${inWishlist ? 'fill-red-500' : ''}`} />
             </Button>
+            <Button
+              size="sm"
+              variant="secondary"
+              className={`bg-white/90 hover:bg-white p-2 ${
+                inComparison ? 'text-blue-500' : 'text-black'
+              }`}
+              onClick={handleComparisonToggle}
+            >
+              <RotateCcw className={`w-4 h-4 ${inComparison ? 'text-blue-500' : ''}`} />
+            </Button>
           </div>
 
           {/* Stock Badge */}
