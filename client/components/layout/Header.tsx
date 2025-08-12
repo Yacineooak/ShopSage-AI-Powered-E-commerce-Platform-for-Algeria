@@ -23,10 +23,13 @@ export function Header() {
   const navigate = useNavigate();
   const { getTotalItems, setIsOpen } = useCartStore();
   const { getTotalItems: getWishlistItems } = useWishlistStore();
+  const { getTotalItems: getComparisonItems } = useComparisonStore();
+  const { user, isAuthenticated, logout } = useAuthStore();
   const { theme, setTheme, language, setLanguage, searchQuery, setSearchQuery } = useAppStore();
 
   const totalItems = getTotalItems();
   const wishlistItems = getWishlistItems();
+  const comparisonItems = getComparisonItems();
 
   const toggleTheme = () => {
     setTheme(theme === 'light' ? 'dark' : 'light');
