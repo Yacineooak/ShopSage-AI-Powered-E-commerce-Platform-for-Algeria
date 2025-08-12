@@ -100,6 +100,7 @@ function AppContent() {
       </main>
       <Footer />
       <CartSidebar />
+      {showFAB && <FloatingActionButton actions={floatingActions} />}
     </div>
   );
 }
