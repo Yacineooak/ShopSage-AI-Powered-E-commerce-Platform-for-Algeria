@@ -1,12 +1,78 @@
 import { Product } from '../stores/cart-store';
 
 export const categories = [
-  { id: 'electronics', name: 'Electronics' },
-  { id: 'clothing', name: 'Clothing' },
-  { id: 'home', name: 'Home & Garden' },
-  { id: 'books', name: 'Books' },
-  { id: 'sports', name: 'Sports & Outdoors' },
-  { id: 'beauty', name: 'Beauty & Personal Care' },
+  {
+    id: 'electronics',
+    name: 'Electronics',
+    description: 'Latest gadgets, devices, and electronic accessories',
+    icon: '📱',
+    productCount: 150,
+    trending: true,
+    subcategories: ['Smartphones', 'Laptops', 'Headphones', 'Smart Home', 'Gaming', 'Cameras']
+  },
+  {
+    id: 'clothing',
+    name: 'Fashion & Clothing',
+    description: 'Trendy apparel, shoes, and accessories for all occasions',
+    icon: '👗',
+    productCount: 230,
+    trending: true,
+    subcategories: ['Men\'s Fashion', 'Women\'s Fashion', 'Kids\' Clothing', 'Shoes', 'Accessories', 'Jewelry']
+  },
+  {
+    id: 'home',
+    name: 'Home & Garden',
+    description: 'Everything for your home, from furniture to gardening supplies',
+    icon: '🏠',
+    productCount: 180,
+    trending: false,
+    subcategories: ['Furniture', 'Kitchen & Dining', 'Bedding', 'Home Decor', 'Garden', 'Tools']
+  },
+  {
+    id: 'books',
+    name: 'Books & Media',
+    description: 'Books, e-books, audiobooks, and educational materials',
+    icon: '📚',
+    productCount: 320,
+    trending: false,
+    subcategories: ['Fiction', 'Non-Fiction', 'Educational', 'Children\'s Books', 'E-books', 'Audiobooks']
+  },
+  {
+    id: 'sports',
+    name: 'Sports & Outdoors',
+    description: 'Fitness equipment, outdoor gear, and sports accessories',
+    icon: '⚽',
+    productCount: 95,
+    trending: true,
+    subcategories: ['Fitness', 'Outdoor Recreation', 'Team Sports', 'Water Sports', 'Winter Sports', 'Cycling']
+  },
+  {
+    id: 'beauty',
+    name: 'Beauty & Personal Care',
+    description: 'Skincare, makeup, fragrances, and wellness products',
+    icon: '💄',
+    productCount: 140,
+    trending: true,
+    subcategories: ['Skincare', 'Makeup', 'Hair Care', 'Fragrances', 'Personal Care', 'Wellness']
+  },
+  {
+    id: 'automotive',
+    name: 'Automotive',
+    description: 'Car accessories, parts, and automotive care products',
+    icon: '🚗',
+    productCount: 75,
+    trending: false,
+    subcategories: ['Car Accessories', 'Parts & Tools', 'Car Care', 'Electronics', 'Interior', 'Exterior']
+  },
+  {
+    id: 'toys',
+    name: 'Toys & Games',
+    description: 'Fun toys, board games, and educational playthings for all ages',
+    icon: '🧸',
+    productCount: 120,
+    trending: true,
+    subcategories: ['Educational Toys', 'Board Games', 'Action Figures', 'Dolls', 'Outdoor Toys', 'Video Games']
+  },
 ];
 
 export const sampleProducts: Product[] = [
