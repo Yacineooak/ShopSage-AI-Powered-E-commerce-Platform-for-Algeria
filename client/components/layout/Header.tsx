@@ -156,17 +156,12 @@ export function Header() {
       {isMenuOpen && (
         <div className="md:hidden border-t bg-background">
           <div className="container mx-auto px-4 py-4 space-y-4">
-            {/* Mobile Search */}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
-              <Input
-                type="text"
-                placeholder="Search products..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 pr-4"
-              />
-            </div>
+            {/* Mobile Smart Search */}
+            <SmartSearch
+              placeholder="Search products..."
+              onSelectProduct={handleProductSelect}
+              onSearch={handleSearch}
+            />
 
             {/* Mobile Navigation */}
             <nav className="flex flex-col space-y-3">
