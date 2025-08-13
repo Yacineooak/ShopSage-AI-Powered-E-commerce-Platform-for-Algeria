@@ -35,7 +35,7 @@ export const useCartStore = create<CartStore>()(
   persist(
     (set, get) => ({
       items: [],
-      currency: 'USD',
+      currency: 'DZD',
       isOpen: false,
       addItem: (product) => {
         const items = get().items;
