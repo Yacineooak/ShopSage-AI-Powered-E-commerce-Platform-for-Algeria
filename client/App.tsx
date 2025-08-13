@@ -24,6 +24,7 @@ import Help from "./pages/Help";
 import Wishlist from "./pages/Wishlist";
 import Shipping from "./pages/Shipping";
 import Compare from "./pages/Compare";
+import Checkout from "./pages/Checkout";
 import Login from "./pages/Login";
 import Admin from "./pages/Admin";
 import NotFound from "./pages/NotFound";
@@ -86,6 +87,7 @@ function AppContent() {
             <Route path="/help" element={<Help />} />
             <Route path="/wishlist" element={<Wishlist />} />
             <Route path="/compare" element={<Compare />} />
+            <Route path="/checkout" element={<Checkout />} />
             <Route path="/shipping" element={<Shipping />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<PlaceholderPage title="Register" />} />
