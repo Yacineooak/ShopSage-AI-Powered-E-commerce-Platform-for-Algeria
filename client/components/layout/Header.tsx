@@ -6,6 +6,7 @@ import { useWishlistStore } from '../../lib/stores/wishlist-store';
 import { useComparisonStore } from '../../lib/stores/comparison-store';
 import { useAuthStore } from '../../lib/stores/auth-store';
 import { useAppStore } from '../../lib/stores/app-store';
+import { useTranslation, Language, formatCurrency } from '../../lib/i18n';
 import { SmartSearch } from '../search/SmartSearch';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
@@ -24,8 +25,12 @@ export function Header() {
   const { getTotalItems, setIsOpen } = useCartStore();
   const { getTotalItems: getWishlistItems } = useWishlistStore();
   const { getTotalItems: getComparisonItems } = useComparisonStore();
-  const { user, isAuthenticated, logout } = useAuthStore();
+  const { user, isAuthenticated, logout, updatePreferences } = useAuthStore();
   const { theme, setTheme, language, setLanguage, searchQuery, setSearchQuery } = useAppStore();
+
+  const currentLanguage: Language = (user?.preferences.language || language || 'fr') as Language;
+  const t = useTranslation(currentLanguage);
+  const isRTL = currentLanguage === 'ar';
 
   const totalItems = getTotalItems();
   const wishlistItems = getWishlistItems();
@@ -44,13 +49,20 @@ export function Header() {
   };
 
   const languages = [
-    { code: 'en', name: 'English' },
-    { code: 'fr', name: 'Français' },
-    { code: 'ar', name: 'العربية' },
+    { code: 'en', name: 'English', flag: '🇺🇸' },
+    { code: 'fr', name: 'Français', flag: '🇫🇷' },
+    { code: 'ar', name: 'العربية', flag: '🇩🇿' },
   ];
 
+  const handleLanguageChange = (lang: Language) => {
+    setLanguage(lang);
+    if (user) {
+      updatePreferences({ language: lang });
+    }
+  };
+
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className={`sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${isRTL ? 'rtl' : 'ltr'}`} dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="container mx-auto flex h-16 items-center justify-between px-4">
         {/* Logo */}
         <Link to="/" className="flex items-center space-x-2">
@@ -63,18 +75,18 @@ export function Header() {
         </Link>
 
         {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-6">
+        <nav className={`hidden md:flex items-center ${isRTL ? 'space-x-reverse space-x-6' : 'space-x-6'}`}>
           <Link to="/" className="text-sm font-medium hover:text-primary transition-colors">
-            Home
+            {t.nav.home}
           </Link>
           <Link to="/products" className="text-sm font-medium hover:text-primary transition-colors">
-            Products
+            {t.nav.products}
           </Link>
           <Link to="/categories" className="text-sm font-medium hover:text-primary transition-colors">
-            Categories
+            {t.nav.categories}
           </Link>
           <Link to="/about" className="text-sm font-medium hover:text-primary transition-colors">
-            About
+            {t.nav.about}
           </Link>
         </nav>
 
@@ -82,14 +94,14 @@ export function Header() {
         <div className="hidden lg:flex flex-1 max-w-sm mx-8">
           <SmartSearch
             className="w-full"
-            placeholder="Search products..."
+            placeholder={t.common.search}
             onSelectProduct={handleProductSelect}
             onSearch={handleSearch}
           />
         </div>
 
         {/* Right Side Actions */}
-        <div className="flex items-center space-x-2">
+        <div className={`flex items-center ${isRTL ? 'space-x-reverse space-x-2' : 'space-x-2'}`}>
           {/* Language Selector */}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -101,9 +113,10 @@ export function Header() {
               {languages.map((lang) => (
                 <DropdownMenuItem
                   key={lang.code}
-                  onClick={() => setLanguage(lang.code as any)}
-                  className={language === lang.code ? 'bg-accent' : ''}
+                  onClick={() => handleLanguageChange(lang.code as Language)}
+                  className={currentLanguage === lang.code ? 'bg-accent' : ''}
                 >
+                  <span className="mr-2">{lang.flag}</span>
                   {lang.name}
                 </DropdownMenuItem>
               ))}
@@ -168,34 +181,34 @@ export function Header() {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                   <Link to="/profile">
-                    <User className="mr-2 h-4 w-4" />
-                    Profile
+                    <User className={`${isRTL ? 'ml-2' : 'mr-2'} h-4 w-4`} />
+                    {t.nav.profile}
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/orders">
-                    <ShoppingCart className="mr-2 h-4 w-4" />
-                    My Orders
+                    <ShoppingCart className={`${isRTL ? 'ml-2' : 'mr-2'} h-4 w-4`} />
+                    {t.profile.orders}
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
                   <Link to="/settings">
-                    <Settings className="mr-2 h-4 w-4" />
-                    Settings
+                    <Settings className={`${isRTL ? 'ml-2' : 'mr-2'} h-4 w-4`} />
+                    {t.profile.preferences}
                   </Link>
                 </DropdownMenuItem>
                 {user?.role === 'admin' && (
                   <DropdownMenuItem asChild>
                     <Link to="/admin">
-                      <Shield className="mr-2 h-4 w-4" />
-                      Admin Dashboard
+                      <Shield className={`${isRTL ? 'ml-2' : 'mr-2'} h-4 w-4`} />
+                      {t.nav.admin}
                     </Link>
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={logout}>
-                  <LogOut className="mr-2 h-4 w-4" />
-                  Logout
+                  <LogOut className={`${isRTL ? 'ml-2' : 'mr-2'} h-4 w-4`} />
+                  {t.nav.logout}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -240,7 +253,7 @@ export function Header() {
           <div className="container mx-auto px-4 py-4 space-y-4">
             {/* Mobile Smart Search */}
             <SmartSearch
-              placeholder="Search products..."
+              placeholder={t.common.search}
               onSelectProduct={handleProductSelect}
               onSearch={handleSearch}
             />
@@ -252,42 +265,42 @@ export function Header() {
                 className="text-sm font-medium hover:text-primary transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Home
+                {t.nav.home}
               </Link>
               <Link
                 to="/products"
                 className="text-sm font-medium hover:text-primary transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Products
+                {t.nav.products}
               </Link>
               <Link
                 to="/categories"
                 className="text-sm font-medium hover:text-primary transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Categories
+                {t.nav.categories}
               </Link>
               <Link
                 to="/about"
                 className="text-sm font-medium hover:text-primary transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                About
+                {t.nav.about}
               </Link>
             </nav>
 
             {/* Mobile Language Selector */}
-            <div className="flex items-center space-x-2">
+            <div className={`flex items-center ${isRTL ? 'space-x-reverse space-x-2' : 'space-x-2'}`}>
               <Globe className="h-4 w-4 text-muted-foreground" />
               <select
-                value={language}
-                onChange={(e) => setLanguage(e.target.value as any)}
+                value={currentLanguage}
+                onChange={(e) => handleLanguageChange(e.target.value as Language)}
                 className="bg-transparent text-sm border-none outline-none"
               >
                 {languages.map((lang) => (
                   <option key={lang.code} value={lang.code}>
-                    {lang.name}
+                    {lang.flag} {lang.name}
                   </option>
                 ))}
               </select>
