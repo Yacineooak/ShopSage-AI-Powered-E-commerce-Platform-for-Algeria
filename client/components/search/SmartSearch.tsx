@@ -4,7 +4,7 @@ import { Search, Sparkles, TrendingUp, Clock, X, ArrowRight } from 'lucide-react
 import { useAppStore } from '../../lib/stores/app-store';
 import { useAuthStore } from '../../lib/stores/auth-store';
 import { sampleProducts, categories } from '../../lib/data/products';
-import { useTranslation, Language } from '../../lib/i18n';
+import { useTranslation, Language, formatCurrency } from '../../lib/i18n';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
@@ -22,7 +22,7 @@ const getPopularSearches = (language: Language) => {
   if (language === 'ar') {
     return [
       'سماعات لاسلكية',
-      'ساعة ذكية',
+      'ساعة ذكية', 
       'أحذية رياضية',
       'آلة قهوة',
       'حقيبة لابتوب',
@@ -81,8 +81,8 @@ const getTrendingSearches = (language: Language) => {
   ];
 };
 
-export function SmartSearch({
-  className = '',
+export function SmartSearch({ 
+  className = '', 
   placeholder,
   onSelectProduct,
   onSearch
@@ -92,31 +92,39 @@ export function SmartSearch({
   const [query, setQuery] = useState('');
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const searchRef = useRef<HTMLDivElement>(null);
-
+  
   const { searchQuery, setSearchQuery, setSelectedCategory } = useAppStore();
   const { user } = useAuthStore();
   const language: Language = user?.preferences.language || 'fr';
   const t = useTranslation(language);
   const isRTL = language === 'ar';
-
+  
   const popularSearches = getPopularSearches(language);
   const trendingSearches = getTrendingSearches(language);
-
+  
   const defaultPlaceholder = language === 'ar' ? 'البحث عن المنتجات...' : language === 'fr' ? 'Rechercher des produits...' : 'Search products...';
 
   // Handle search submission
   const handleSearch = (searchTerm: string) => {
     if (!searchTerm.trim()) return;
-
+    
+    // Update recent searches
+    const newRecentSearches = [
+      searchTerm,
+      ...recentSearches.filter(term => term !== searchTerm)
+    ].slice(0, 5);
+    
+    setRecentSearches(newRecentSearches);
+    localStorage.setItem('recent-searches', JSON.stringify(newRecentSearches));
+    
+    // Update global search query
     setSearchQuery(searchTerm);
-    setRecentSearches(prev => {
-      const updated = [searchTerm, ...prev.filter(s => s !== searchTerm)].slice(0, 5);
-      localStorage.setItem('recent-searches', JSON.stringify(updated));
-      return updated;
-    });
+    
+    // Reset states
     setIsOpen(false);
     setQuery('');
-
+    
+    // Call onSearch callback or navigate to products
     if (onSearch) {
       onSearch(searchTerm);
     } else {
@@ -136,7 +144,12 @@ export function SmartSearch({
   useEffect(() => {
     const saved = localStorage.getItem('recent-searches');
     if (saved) {
-      setRecentSearches(JSON.parse(saved));
+      try {
+        setRecentSearches(JSON.parse(saved));
+      } catch (error) {
+        console.warn('Failed to parse recent searches from localStorage');
+        localStorage.removeItem('recent-searches');
+      }
     }
   }, []);
 
@@ -168,36 +181,6 @@ export function SmartSearch({
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  // Load recent searches from localStorage
-  useEffect(() => {
-    const saved = localStorage.getItem('recentSearches');
-    if (saved) {
-      setRecentSearches(JSON.parse(saved));
-    }
-  }, []);
-
-  const handleSearch = (searchTerm: string) => {
-    if (searchTerm.trim()) {
-      // Update recent searches
-      const newRecentSearches = [
-        searchTerm,
-        ...recentSearches.filter(term => term !== searchTerm)
-      ].slice(0, 5);
-      
-      setRecentSearches(newRecentSearches);
-      localStorage.setItem('recentSearches', JSON.stringify(newRecentSearches));
-      
-      // Update global search query
-      setSearchQuery(searchTerm);
-      
-      // Call onSearch callback
-      onSearch?.(searchTerm);
-    }
-    
-    setIsOpen(false);
-    setQuery(searchTerm);
-  };
-
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       e.preventDefault();
@@ -209,23 +192,16 @@ export function SmartSearch({
 
   const clearRecentSearches = () => {
     setRecentSearches([]);
-    localStorage.removeItem('recentSearches');
-  };
-
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-    }).format(price);
+    localStorage.removeItem('recent-searches');
   };
 
   return (
     <div ref={searchRef} className={`relative ${className}`}>
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+        <Search className={`absolute top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4 ${isRTL ? 'right-3' : 'left-3'}`} />
         <Input
           type="text"
-          placeholder={placeholder}
+          placeholder={placeholder || defaultPlaceholder}
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
@@ -233,13 +209,14 @@ export function SmartSearch({
           }}
           onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
-          className="pl-10 pr-4"
+          className={`${isRTL ? 'pr-10 pl-4' : 'pl-10 pr-4'}`}
+          dir={isRTL ? 'rtl' : 'ltr'}
         />
         {query && (
           <Button
             variant="ghost"
             size="sm"
-            className="absolute right-1 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+            className={`absolute top-1/2 transform -translate-y-1/2 h-6 w-6 p-0 ${isRTL ? 'left-1' : 'right-1'}`}
             onClick={() => {
               setQuery('');
               setIsOpen(false);
@@ -252,7 +229,7 @@ export function SmartSearch({
 
       {/* Search Dropdown */}
       {isOpen && (
-        <Card className="absolute top-full left-0 right-0 mt-2 z-50 max-h-96 overflow-y-auto">
+        <Card className={`absolute top-full left-0 right-0 mt-2 z-50 max-h-96 overflow-y-auto ${isRTL ? 'rtl' : 'ltr'}`} dir={isRTL ? 'rtl' : 'ltr'}>
           <CardContent className="p-0">
             {query.length === 0 ? (
               /* Default suggestions when no query */
@@ -260,10 +237,10 @@ export function SmartSearch({
                 {/* Recent Searches */}
                 {recentSearches.length > 0 && (
                   <div>
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center text-sm font-medium text-muted-foreground">
-                        <Clock className="w-4 h-4 mr-2" />
-                        Recent Searches
+                    <div className={`flex items-center justify-between mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                      <div className={`flex items-center text-sm font-medium text-muted-foreground ${isRTL ? 'flex-row-reverse' : ''}`}>
+                        <Clock className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                        {language === 'ar' ? 'عمليات البحث الأخيرة' : language === 'fr' ? 'Recherches récentes' : 'Recent Searches'}
                       </div>
                       <Button
                         variant="ghost"
@@ -271,14 +248,14 @@ export function SmartSearch({
                         className="text-xs"
                         onClick={clearRecentSearches}
                       >
-                        Clear
+                        {language === 'ar' ? 'مسح' : language === 'fr' ? 'Effacer' : 'Clear'}
                       </Button>
                     </div>
                     <div className="space-y-1">
                       {recentSearches.map((term, index) => (
                         <button
                           key={index}
-                          className="w-full text-left px-3 py-2 text-sm hover:bg-muted rounded-md transition-colors"
+                          className={`w-full px-3 py-2 text-sm hover:bg-muted rounded-md transition-colors ${isRTL ? 'text-right' : 'text-left'}`}
                           onClick={() => handleSearch(term)}
                         >
                           {term}
@@ -292,15 +269,15 @@ export function SmartSearch({
 
                 {/* Popular Searches */}
                 <div>
-                  <div className="flex items-center text-sm font-medium text-muted-foreground mb-3">
-                    <TrendingUp className="w-4 h-4 mr-2" />
-                    Popular Searches
+                  <div className={`flex items-center text-sm font-medium text-muted-foreground mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <TrendingUp className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                    {language === 'ar' ? 'عمليات البحث الشائعة' : language === 'fr' ? 'Recherches populaires' : 'Popular Searches'}
                   </div>
                   <div className="grid grid-cols-2 gap-2">
                     {popularSearches.slice(0, 6).map((term, index) => (
                       <button
                         key={index}
-                        className="text-left px-3 py-2 text-sm hover:bg-muted rounded-md transition-colors"
+                        className={`px-3 py-2 text-sm hover:bg-muted rounded-md transition-colors ${isRTL ? 'text-right' : 'text-left'}`}
                         onClick={() => handleSearch(term)}
                       >
                         {term}
@@ -313,9 +290,9 @@ export function SmartSearch({
 
                 {/* Trending */}
                 <div>
-                  <div className="flex items-center text-sm font-medium text-muted-foreground mb-3">
-                    <Sparkles className="w-4 h-4 mr-2" />
-                    Trending Now
+                  <div className={`flex items-center text-sm font-medium text-muted-foreground mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <Sparkles className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                    {language === 'ar' ? 'الأكثر رواجاً الآن' : language === 'fr' ? 'Tendance maintenant' : 'Trending Now'}
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {trendingSearches.map((term, index) => (
@@ -337,12 +314,17 @@ export function SmartSearch({
                 {/* AI Suggestion */}
                 {query.length > 2 && (
                   <div className="bg-gradient-to-r from-primary/10 to-sage-100/50 dark:from-primary/5 dark:to-sage-900/20 p-3 rounded-lg">
-                    <div className="flex items-center text-sm font-medium text-primary mb-2">
-                      <Sparkles className="w-4 h-4 mr-2" />
-                      AI Suggestion
+                    <div className={`flex items-center text-sm font-medium text-primary mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                      <Sparkles className={`w-4 h-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                      {language === 'ar' ? 'اقتراح ذكي' : language === 'fr' ? 'Suggestion IA' : 'AI Suggestion'}
                     </div>
                     <p className="text-sm text-muted-foreground">
-                      Looking for "{query}"? Try searching for "wireless {query}" or check our Electronics category for similar items.
+                      {language === 'ar' 
+                        ? `تبحث عن "${query}"؟ جرب البحث عن "${query} لاسلكي" أو تحقق من فئة الإلكترونيات للعناصر المشابهة.`
+                        : language === 'fr'
+                        ? `Vous cherchez "${query}" ? Essayez de rechercher "${query} sans fil" ou consultez notre catégorie Électronique pour des articles similaires.`
+                        : `Looking for "${query}"? Try searching for "wireless ${query}" or check our Electronics category for similar items.`
+                      }
                     </p>
                   </div>
                 )}
@@ -351,13 +333,13 @@ export function SmartSearch({
                 {suggestions.products.length > 0 && (
                   <div>
                     <div className="text-sm font-medium text-muted-foreground mb-3">
-                      Products
+                      {language === 'ar' ? 'المنتجات' : language === 'fr' ? 'Produits' : 'Products'}
                     </div>
                     <div className="space-y-2">
                       {suggestions.products.map((product) => (
                         <button
                           key={product.id}
-                          className="w-full flex items-center space-x-3 p-2 hover:bg-muted rounded-md transition-colors text-left"
+                          className={`w-full flex items-center p-2 hover:bg-muted rounded-md transition-colors ${isRTL ? 'space-x-reverse space-x-3 text-right' : 'space-x-3 text-left'}`}
                           onClick={() => {
                             onSelectProduct?.(product.id);
                             setIsOpen(false);
@@ -371,11 +353,11 @@ export function SmartSearch({
                           <div className="flex-1 min-w-0">
                             <div className="text-sm font-medium truncate">{product.name}</div>
                             <div className="text-xs text-muted-foreground">
-                              {formatPrice(product.price)}
+                              {formatCurrency(product.price, 'DZD')}
                             </div>
                           </div>
                           <Badge variant="outline" className="text-xs">
-                            {categories.find(c => c.id === product.category)?.name}
+                            {language === 'ar' ? t.categories[product.category as keyof typeof t.categories] : categories.find(c => c.id === product.category)?.name}
                           </Badge>
                         </button>
                       ))}
@@ -388,20 +370,22 @@ export function SmartSearch({
                   <div>
                     {suggestions.products.length > 0 && <Separator />}
                     <div className="text-sm font-medium text-muted-foreground mb-3">
-                      Categories
+                      {language === 'ar' ? 'الفئات' : language === 'fr' ? 'Catégories' : 'Categories'}
                     </div>
                     <div className="space-y-1">
                       {suggestions.categories.map((category) => (
                         <button
                           key={category.id}
-                          className="w-full flex items-center space-x-3 p-2 hover:bg-muted rounded-md transition-colors text-left"
-                          onClick={() => handleSearch(`category:${category.name}`)}
+                          className={`w-full flex items-center p-2 hover:bg-muted rounded-md transition-colors ${isRTL ? 'space-x-reverse space-x-3 text-right' : 'space-x-3 text-left'}`}
+                          onClick={() => handleCategorySearch(category.id)}
                         >
                           <div className="text-2xl">{category.icon}</div>
                           <div className="flex-1">
-                            <div className="text-sm font-medium">{category.name}</div>
+                            <div className="text-sm font-medium">
+                              {language === 'ar' ? t.categories[category.id as keyof typeof t.categories] : category.name}
+                            </div>
                             <div className="text-xs text-muted-foreground">
-                              {category.productCount} products
+                              {category.productCount} {language === 'ar' ? 'منتج' : language === 'fr' ? 'produits' : 'products'}
                             </div>
                           </div>
                         </button>
@@ -414,9 +398,11 @@ export function SmartSearch({
                 {suggestions.products.length === 0 && suggestions.categories.length === 0 && (
                   <div className="text-center py-8">
                     <Search className="w-12 h-12 text-muted-foreground mx-auto mb-3" />
-                    <div className="text-sm font-medium mb-1">No results found</div>
+                    <div className="text-sm font-medium mb-1">
+                      {language === 'ar' ? 'لم يتم العثور على نتائج' : language === 'fr' ? 'Aucun résultat trouvé' : 'No results found'}
+                    </div>
                     <div className="text-xs text-muted-foreground">
-                      Try searching for something else
+                      {language === 'ar' ? 'جرب البحث عن شيء آخر' : language === 'fr' ? 'Essayez de rechercher autre chose' : 'Try searching for something else'}
                     </div>
                   </div>
                 )}
@@ -427,7 +413,7 @@ export function SmartSearch({
                     className="w-full"
                     onClick={() => handleSearch(query)}
                   >
-                    Search for "{query}"
+                    {language === 'ar' ? `البحث عن "${query}"` : language === 'fr' ? `Rechercher "${query}"` : `Search for "${query}"`}
                   </Button>
                 </div>
               </div>
