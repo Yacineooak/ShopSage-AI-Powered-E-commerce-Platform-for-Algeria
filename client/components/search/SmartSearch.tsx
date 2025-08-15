@@ -1,7 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
-import { Search, Sparkles, TrendingUp, Clock, X } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Search, Sparkles, TrendingUp, Clock, X, ArrowRight } from 'lucide-react';
 import { useAppStore } from '../../lib/stores/app-store';
+import { useAuthStore } from '../../lib/stores/auth-store';
 import { sampleProducts, categories } from '../../lib/data/products';
+import { useTranslation, Language } from '../../lib/i18n';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
@@ -15,37 +18,127 @@ interface SmartSearchProps {
   onSearch?: (query: string) => void;
 }
 
-const popularSearches = [
-  'Wireless headphones',
-  'Smart watch',
-  'Running shoes',
-  'Coffee maker',
-  'Laptop bag',
-  'Yoga mat',
-  'Phone case',
-  'Skincare set'
-];
+const getPopularSearches = (language: Language) => {
+  if (language === 'ar') {
+    return [
+      'سماعات لاسلكية',
+      'ساعة ذكية',
+      'أحذية رياضية',
+      'آلة قهوة',
+      'حقيبة لابتوب',
+      'بساط يوغا',
+      'غطاء هاتف',
+      'مجموعة عناية بالبشرة'
+    ];
+  } else if (language === 'fr') {
+    return [
+      'Écouteurs sans fil',
+      'Montre intelligente',
+      'Chaussures de course',
+      'Machine à café',
+      'Sac pour ordinateur portable',
+      'Tapis de yoga',
+      'Coque de téléphone',
+      'Kit de soins de la peau'
+    ];
+  }
+  return [
+    'Wireless headphones',
+    'Smart watch',
+    'Running shoes',
+    'Coffee maker',
+    'Laptop bag',
+    'Yoga mat',
+    'Phone case',
+    'Skincare set'
+  ];
+};
 
-const trendingSearches = [
-  'AI gadgets',
-  'Sustainable products',
-  'Home office setup',
-  'Fitness equipment',
-  'Smart home devices'
-];
+const getTrendingSearches = (language: Language) => {
+  if (language === 'ar') {
+    return [
+      'أجهزة ذكية',
+      'منتجات مستدامة',
+      'مكتب منزلي',
+      'معدات رياضية',
+      'أجهزة منزل ذكي'
+    ];
+  } else if (language === 'fr') {
+    return [
+      'Gadgets IA',
+      'Produits durables',
+      'Bureau à domicile',
+      'Équipement fitness',
+      'Appareils maison intelligente'
+    ];
+  }
+  return [
+    'AI gadgets',
+    'Sustainable products',
+    'Home office setup',
+    'Fitness equipment',
+    'Smart home devices'
+  ];
+};
 
-export function SmartSearch({ 
-  className = '', 
-  placeholder = 'Search products...',
+export function SmartSearch({
+  className = '',
+  placeholder,
   onSelectProduct,
   onSearch
 }: SmartSearchProps) {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const searchRef = useRef<HTMLDivElement>(null);
-  
-  const { searchQuery, setSearchQuery } = useAppStore();
+
+  const { searchQuery, setSearchQuery, setSelectedCategory } = useAppStore();
+  const { user } = useAuthStore();
+  const language: Language = user?.preferences.language || 'fr';
+  const t = useTranslation(language);
+  const isRTL = language === 'ar';
+
+  const popularSearches = getPopularSearches(language);
+  const trendingSearches = getTrendingSearches(language);
+
+  const defaultPlaceholder = language === 'ar' ? 'البحث عن المنتجات...' : language === 'fr' ? 'Rechercher des produits...' : 'Search products...';
+
+  // Handle search submission
+  const handleSearch = (searchTerm: string) => {
+    if (!searchTerm.trim()) return;
+
+    setSearchQuery(searchTerm);
+    setRecentSearches(prev => {
+      const updated = [searchTerm, ...prev.filter(s => s !== searchTerm)].slice(0, 5);
+      localStorage.setItem('recent-searches', JSON.stringify(updated));
+      return updated;
+    });
+    setIsOpen(false);
+    setQuery('');
+
+    if (onSearch) {
+      onSearch(searchTerm);
+    } else {
+      navigate('/products');
+    }
+  };
+
+  // Handle category search
+  const handleCategorySearch = (categoryId: string) => {
+    setSelectedCategory(categoryId);
+    setIsOpen(false);
+    setQuery('');
+    navigate('/products');
+  };
+
+  // Load recent searches from localStorage
+  useEffect(() => {
+    const saved = localStorage.getItem('recent-searches');
+    if (saved) {
+      setRecentSearches(JSON.parse(saved));
+    }
+  }, []);
 
   // Get suggestions based on query
   const suggestions = query.length > 0 ? {
