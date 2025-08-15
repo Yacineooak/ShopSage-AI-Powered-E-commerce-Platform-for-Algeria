@@ -99,15 +99,15 @@ export function Footer() {
             <div className="space-y-2 pt-4">
               <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                 <Mail className="h-4 w-4" />
-                <span>support@shopsage.com</span>
+                <span>stylebenderkh@gmail.com</span>
               </div>
               <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                 <Phone className="h-4 w-4" />
-                <span>+1 (555) 123-4567</span>
+                <span>+213 541095903</span>
               </div>
               <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                 <MapPin className="h-4 w-4" />
-                <span>San Francisco, CA</span>
+                <span>Algiers, Algeria</span>
               </div>
             </div>
           </div>

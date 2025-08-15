@@ -20,17 +20,17 @@ const contactMethods = [
     icon: Mail,
     title: 'Email Support',
     description: 'Get help via email within 24 hours',
-    contact: 'support@shopsage.com',
-    action: 'mailto:support@shopsage.com',
+    contact: 'stylebenderkh@gmail.com',
+    action: 'mailto:stylebenderkh@gmail.com',
     available: '24/7'
   },
   {
     icon: Phone,
     title: 'Phone Support',
     description: 'Speak directly with our support team',
-    contact: '+1 (555) 123-4567',
-    action: 'tel:+15551234567',
-    available: 'Mon-Fri 9AM-6PM PST'
+    contact: '+213 541095903',
+    action: 'tel:+213541095903',
+    available: 'Daily 8AM-8PM WAT'
   },
   {
     icon: MessageSquare,
@@ -55,53 +55,39 @@ const departments = [
     icon: ShoppingCart,
     name: 'Order Support',
     description: 'Questions about your orders, tracking, and delivery',
-    email: 'orders@shopsage.com',
+    email: 'stylebenderkh@gmail.com',
     topics: ['Order Status', 'Tracking Issues', 'Delivery Problems', 'Order Changes']
   },
   {
     icon: CreditCard,
     name: 'Billing & Payments',
     description: 'Payment issues, refunds, and billing questions',
-    email: 'billing@shopsage.com',
+    email: 'stylebenderkh@gmail.com',
     topics: ['Payment Failed', 'Refund Requests', 'Billing Questions', 'Payment Methods']
   },
   {
     icon: RotateCcw,
     name: 'Returns & Exchanges',
     description: 'Help with returns, exchanges, and product issues',
-    email: 'returns@shopsage.com',
+    email: 'stylebenderkh@gmail.com',
     topics: ['Return Request', 'Exchange Product', 'Defective Item', 'Wrong Size/Color']
   },
   {
     icon: Headphones,
     name: 'Technical Support',
     description: 'Website issues, account problems, and technical help',
-    email: 'tech@shopsage.com',
+    email: 'stylebenderkh@gmail.com',
     topics: ['Login Issues', 'Website Bugs', 'Account Problems', 'App Support']
   }
 ];
 
 const officeLocations = [
   {
-    city: 'San Francisco',
-    address: '123 Tech Street, Suite 100\nSan Francisco, CA 94105',
-    phone: '+1 (555) 123-4567',
-    hours: 'Mon-Fri: 9AM-6PM PST',
+    city: 'Algiers',
+    address: 'Bab Ezzouar\nAlgiers, Algeria',
+    phone: '+213 541095903',
+    hours: 'Daily: 8AM-8PM WAT',
     isHQ: true
-  },
-  {
-    city: 'New York',
-    address: '456 Commerce Ave, Floor 15\nNew York, NY 10001',
-    phone: '+1 (555) 234-5678',
-    hours: 'Mon-Fri: 9AM-6PM EST',
-    isHQ: false
-  },
-  {
-    city: 'London',
-    address: '789 Innovation Road\nLondon, UK SW1A 1AA',
-    phone: '+44 20 7123 4567',
-    hours: 'Mon-Fri: 9AM-5PM GMT',
-    isHQ: false
   }
 ];
 
