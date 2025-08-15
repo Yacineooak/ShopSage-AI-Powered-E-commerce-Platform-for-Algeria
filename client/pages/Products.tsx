@@ -1,12 +1,15 @@
 import { useState, useMemo } from 'react';
-import { Search, Filter, Grid, List, SlidersHorizontal } from 'lucide-react';
+import { Search, Filter, Grid, List, SlidersHorizontal, Home, ChevronRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { useAppStore } from '../lib/stores/app-store';
+import { useAuthStore } from '../lib/stores/auth-store';
 import { sampleProducts, categories } from '../lib/data/products';
 import { ProductCard } from '../components/products/ProductCard';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Label } from '../components/ui/label';
 import { Slider } from '../components/ui/slider';
+import { useTranslation, Language, formatCurrency } from '../lib/i18n';
 import {
   Select,
   SelectContent,
@@ -26,7 +29,7 @@ import { Badge } from '../components/ui/badge';
 export default function Products() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [sortBy, setSortBy] = useState('featured');
-  
+
   const {
     searchQuery,
     setSearchQuery,
@@ -38,6 +41,11 @@ export default function Products() {
     setRatingFilter,
     resetFilters,
   } = useAppStore();
+
+  const { user } = useAuthStore();
+  const language: Language = user?.preferences.language || 'fr';
+  const t = useTranslation(language);
+  const isRTL = language === 'ar';
 
   const filteredProducts = useMemo(() => {
     let filtered = [...sampleProducts];
@@ -117,14 +125,14 @@ export default function Products() {
       {/* Price Range */}
       <div className="space-y-3">
         <Label className="text-base font-semibold">
-          Price Range: ${priceRange[0]} - ${priceRange[1]}
+          {language === 'ar' ? 'نطاق السعر' : language === 'fr' ? 'Gamme de prix' : 'Price Range'}: {formatCurrency(priceRange[0], 'DZD')} - {formatCurrency(priceRange[1], 'DZD')}
         </Label>
         <Slider
           value={priceRange}
           onValueChange={(value) => setPriceRange(value as [number, number])}
-          max={1000}
+          max={100000}
           min={0}
-          step={10}
+          step={500}
           className="w-full"
         />
       </div>
@@ -155,12 +163,38 @@ export default function Products() {
   );
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className={`container mx-auto px-4 py-8 ${isRTL ? 'rtl' : 'ltr'}`} dir={isRTL ? 'rtl' : 'ltr'}>
+      {/* Breadcrumbs */}
+      <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-6">
+        <Link to="/" className="flex items-center hover:text-foreground transition-colors">
+          <Home className="h-4 w-4" />
+        </Link>
+        <ChevronRight className="h-4 w-4" />
+        <span className="text-foreground font-medium">
+          {language === 'ar' ? 'المنتجات' : language === 'fr' ? 'Produits' : 'Products'}
+        </span>
+        {selectedCategory && (
+          <>
+            <ChevronRight className="h-4 w-4" />
+            <span className="text-foreground">
+              {categories.find(c => c.id === selectedCategory)?.name}
+            </span>
+          </>
+        )}
+      </nav>
+
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">Products</h1>
+        <h1 className="text-3xl font-bold mb-2">
+          {language === 'ar' ? 'المنتجات' : language === 'fr' ? 'Produits' : 'Products'}
+        </h1>
         <p className="text-muted-foreground">
-          Discover amazing products curated just for you
+          {language === 'ar'
+            ? 'اكتشف منتج��ت رائعة مختارة خصيصاً لك'
+            : language === 'fr'
+            ? 'Découvrez des produits incroyables sélectionnés rien que pour vous'
+            : 'Discover amazing products curated just for you'
+          }
         </p>
       </div>
 
@@ -171,7 +205,7 @@ export default function Products() {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
           <Input
             type="text"
-            placeholder="Search products..."
+            placeholder={language === 'ar' ? 'البحث عن المنتجات...' : language === 'fr' ? 'Rechercher des produits...' : 'Search products...'}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 pr-4"
@@ -269,9 +303,9 @@ export default function Products() {
             )}
             {(priceRange[0] > 0 || priceRange[1] < 1000) && (
               <Badge variant="secondary" className="flex items-center gap-1">
-                ${priceRange[0]} - ${priceRange[1]}
+                {formatCurrency(priceRange[0], 'DZD')} - {formatCurrency(priceRange[1], 'DZD')}
                 <button
-                  onClick={() => setPriceRange([0, 1000])}
+                  onClick={() => setPriceRange([0, 100000])}
                   className="ml-1 hover:text-destructive"
                 >
                   ×
@@ -282,7 +316,12 @@ export default function Products() {
 
           {/* Results Count */}
           <div className="mb-6 text-muted-foreground">
-            {filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''} found
+            {language === 'ar'
+              ? `تم العثور على ${filteredProducts.length} منتج`
+              : language === 'fr'
+              ? `${filteredProducts.length} produit${filteredProducts.length !== 1 ? 's' : ''} trouvé${filteredProducts.length !== 1 ? 's' : ''}`
+              : `${filteredProducts.length} product${filteredProducts.length !== 1 ? 's' : ''} found`
+            }
           </div>
 
           {/* Products */}
@@ -291,11 +330,20 @@ export default function Products() {
               <div className="w-24 h-24 mx-auto bg-muted rounded-full flex items-center justify-center mb-4">
                 <Search className="w-12 h-12 text-muted-foreground" />
               </div>
-              <h3 className="text-lg font-semibold mb-2">No products found</h3>
+              <h3 className="text-lg font-semibold mb-2">
+                {language === 'ar' ? 'لم يتم العثور على منتجات' : language === 'fr' ? 'Aucun produit trouvé' : 'No products found'}
+              </h3>
               <p className="text-muted-foreground mb-4">
-                Try adjusting your filters or search terms
+                {language === 'ar'
+                  ? 'جرب تعديل الفلاتر أو كلمات البحث'
+                  : language === 'fr'
+                  ? 'Essayez d\'ajuster vos filtres ou termes de recherche'
+                  : 'Try adjusting your filters or search terms'
+                }
               </p>
-              <Button onClick={resetFilters}>Clear all filters</Button>
+              <Button onClick={resetFilters}>
+                {language === 'ar' ? 'مسح جميع الفلاتر' : language === 'fr' ? 'Effacer tous les filtres' : 'Clear all filters'}
+              </Button>
             </div>
           ) : (
             <div
