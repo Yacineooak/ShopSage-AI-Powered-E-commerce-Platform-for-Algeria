@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import { CreditCard, Truck, Shield, Globe, MapPin, Phone, Banknote, Clock, CheckCircle, Star, Award, Heart } from 'lucide-react';
 import { useAuthStore } from '../../lib/stores/auth-store';
 import { useTranslation, Language, formatCurrency } from '../../lib/i18n';
@@ -371,13 +372,16 @@ export function AlgerianFeaturesSection() {
                    'For orders above'} {formatCurrency(5000, 'DZD')}
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-                  <Button 
-                    size="lg" 
+                  <Button
+                    asChild
+                    size="lg"
                     className="bg-white text-purple-600 hover:bg-gray-100 font-semibold px-8 py-3 rounded-full shadow-lg"
                   >
-                    {language === 'ar' ? 'ابدأ التسوق الآن' : 
-                     language === 'fr' ? 'Commencer mes achats' : 
-                     'Start Shopping Now'}
+                    <Link to="/products">
+                      {language === 'ar' ? 'ابدأ التسوق الآن' :
+                       language === 'fr' ? 'Commencer mes achats' :
+                       'Start Shopping Now'}
+                    </Link>
                   </Button>
                   <div className="flex items-center gap-2 text-purple-100 text-sm">
                     <Shield className="h-4 w-4" />
