@@ -27,7 +27,7 @@ export const useAppStore = create<AppStore>()(
       theme: 'light',
       searchQuery: '',
       selectedCategory: null,
-      priceRange: [0, 1000],
+      priceRange: [0, 100000], // Updated for DZD currency
       ratingFilter: null,
       setLanguage: (language) => set({ language }),
       setTheme: (theme) => {
@@ -41,7 +41,7 @@ export const useAppStore = create<AppStore>()(
       resetFilters: () => set({
         searchQuery: '',
         selectedCategory: null,
-        priceRange: [0, 1000],
+        priceRange: [0, 100000], // Updated for DZD currency
         ratingFilter: null,
       }),
     }),
