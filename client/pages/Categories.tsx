@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, TrendingUp, Users, Star, ArrowRight, Grid, List, Filter } from 'lucide-react';
+import { Search, TrendingUp, Users, Star, ArrowRight, Grid, List, Filter, Home, ChevronRight } from 'lucide-react';
 import { categories } from '../lib/data/products';
 import { useAppStore } from '../lib/stores/app-store';
+import { useAuthStore } from '../lib/stores/auth-store';
+import { useTranslation, Language } from '../lib/i18n';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Badge } from '../components/ui/badge';
@@ -25,6 +27,10 @@ export default function Categories() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [showTrendingOnly, setShowTrendingOnly] = useState(false);
   const { setSelectedCategory } = useAppStore();
+  const { user } = useAuthStore();
+  const language: Language = user?.preferences.language || 'fr';
+  const t = useTranslation(language);
+  const isRTL = language === 'ar';
 
   const filteredCategories = categories.filter(category => {
     const matchesSearch = category.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -44,56 +50,70 @@ export default function Categories() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
+    <div className={`min-h-screen bg-gradient-to-br from-background via-muted/20 to-background ${isRTL ? 'rtl' : 'ltr'}`} dir={isRTL ? 'rtl' : 'ltr'}>
+      {/* Breadcrumbs */}
+      <div className="container mx-auto px-4 pt-6">
+        <nav className={`flex items-center ${isRTL ? 'space-x-reverse space-x-2' : 'space-x-2'} text-sm text-muted-foreground mb-4`}>
+          <Link to="/" className="flex items-center hover:text-foreground transition-colors">
+            <Home className="h-4 w-4" />
+          </Link>
+          <ChevronRight className="h-4 w-4" />
+          <span className="text-foreground font-medium">
+            {language === 'ar' ? 'الفئات' : language === 'fr' ? 'Catégories' : 'Categories'}
+          </span>
+        </nav>
+      </div>
+
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-r from-primary/10 via-sage-100/50 to-accent/10 dark:from-primary/5 dark:via-sage-900/20 dark:to-accent/5">
         <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
-        <div className="container mx-auto px-4 py-16 lg:py-24">
-          <div className="text-center space-y-6 max-w-4xl mx-auto">
-            <div className="inline-flex items-center px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium">
-              <Grid className="w-4 h-4 mr-2" />
-              Browse All Categories
-            </div>
-            
-            <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
-              Discover Products by{' '}
-              <span className="bg-gradient-to-r from-primary to-sage-600 bg-clip-text text-transparent">
-                Category
-              </span>
+        <div className="container mx-auto px-4 py-20 relative">
+          <div className="text-center max-w-4xl mx-auto">
+            <h1 className="text-4xl lg:text-5xl font-bold mb-6">
+              {language === 'ar' ? 'استكشف فئاتنا' : language === 'fr' ? 'Explorez nos catégories' : 'Explore Our Categories'}
             </h1>
-            
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Explore our carefully curated categories with over {totalProducts.toLocaleString()} products 
-              across {categories.length} different categories. Find exactly what you're looking for.
+            <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+              {language === 'ar' 
+                ? 'اكتشف مجموعة واسعة من المنتجات المنظمة بعناية لتناسب احتياجاتك'
+                : language === 'fr'
+                ? 'Découvrez une large gamme de produits soigneusement organisés pour répondre à vos besoins'
+                : 'Discover a wide range of products carefully organized to meet your needs'
+              }
             </p>
 
             {/* Search Bar */}
-            <div className="max-w-lg mx-auto">
+            <div className="max-w-lg mx-auto mb-8">
               <div className="relative">
-                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
+                <Search className={`absolute top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5 ${isRTL ? 'right-4' : 'left-4'}`} />
                 <Input
                   type="text"
-                  placeholder="Search categories..."
+                  placeholder={language === 'ar' ? 'البحث عن فئة...' : language === 'fr' ? 'Rechercher une catégorie...' : 'Search categories...'}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-12 pr-4 h-12 text-lg border-2 focus:border-primary"
+                  className={`text-center ${isRTL ? 'pr-12' : 'pl-12'} py-3 text-lg border-2 border-primary/20 focus:border-primary`}
                 />
               </div>
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-2xl mx-auto pt-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-2xl mx-auto">
               <div className="text-center">
-                <div className="text-2xl font-bold text-primary">{categories.length}</div>
-                <div className="text-sm text-muted-foreground">Categories</div>
+                <div className="text-3xl font-bold text-primary">{categories.length}</div>
+                <div className="text-sm text-muted-foreground">
+                  {language === 'ar' ? 'فئة' : language === 'fr' ? 'Catégories' : 'Categories'}
+                </div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-primary">{totalProducts.toLocaleString()}</div>
-                <div className="text-sm text-muted-foreground">Products</div>
+                <div className="text-3xl font-bold text-primary">{totalProducts.toLocaleString()}</div>
+                <div className="text-sm text-muted-foreground">
+                  {language === 'ar' ? 'منتج' : language === 'fr' ? 'Produits' : 'Products'}
+                </div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-primary">{trendingCategories.length}</div>
-                <div className="text-sm text-muted-foreground">Trending</div>
+                <div className="text-3xl font-bold text-primary">{trendingCategories.length}</div>
+                <div className="text-sm text-muted-foreground">
+                  {language === 'ar' ? 'رائج' : language === 'fr' ? 'Tendances' : 'Trending'}
+                </div>
               </div>
             </div>
           </div>
@@ -103,32 +123,37 @@ export default function Categories() {
       {/* Filter Bar */}
       <section className="border-b bg-background/95 backdrop-blur sticky top-16 z-40">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex flex-col lg:flex-row items-center justify-between gap-4">
-            <div className="flex items-center space-x-4">
+          <div className={`flex flex-col lg:flex-row items-center justify-between gap-4 ${isRTL ? 'lg:flex-row-reverse' : ''}`}>
+            <div className={`flex items-center ${isRTL ? 'space-x-reverse space-x-4' : 'space-x-4'}`}>
               <span className="text-sm font-medium">
-                {filteredCategories.length} categories found
+                {language === 'ar' 
+                  ? `تم العثور على ${filteredCategories.length} فئة`
+                  : language === 'fr'
+                  ? `${filteredCategories.length} catégories trouvées`
+                  : `${filteredCategories.length} categories found`
+                }
               </span>
               {searchQuery && (
                 <Badge variant="secondary">
-                  Searching: "{searchQuery}"
+                  {language === 'ar' ? `البحث: "${searchQuery}"` : language === 'fr' ? `Recherche: "${searchQuery}"` : `Searching: "${searchQuery}"`}
                 </Badge>
               )}
               {showTrendingOnly && (
                 <Badge variant="default">
                   <TrendingUp className="w-3 h-3 mr-1" />
-                  Trending Only
+                  {language === 'ar' ? 'الرائج فقط' : language === 'fr' ? 'Tendances uniquement' : 'Trending Only'}
                 </Badge>
               )}
             </div>
 
-            <div className="flex items-center space-x-2">
+            <div className={`flex items-center ${isRTL ? 'space-x-reverse space-x-2' : 'space-x-2'}`}>
               <Button
                 variant={showTrendingOnly ? "default" : "outline"}
                 size="sm"
                 onClick={() => setShowTrendingOnly(!showTrendingOnly)}
               >
                 <TrendingUp className="w-4 h-4 mr-2" />
-                Trending
+                {language === 'ar' ? 'رائج' : language === 'fr' ? 'Tendances' : 'Trending'}
               </Button>
 
               <Separator orientation="vertical" className="h-6" />
@@ -162,12 +187,19 @@ export default function Categories() {
               <div className="w-24 h-24 mx-auto bg-muted rounded-full flex items-center justify-center mb-6">
                 <Search className="w-12 h-12 text-muted-foreground" />
               </div>
-              <h3 className="text-2xl font-bold mb-2">No categories found</h3>
+              <h3 className="text-2xl font-bold mb-2">
+                {language === 'ar' ? 'لم يتم العثور على فئات' : language === 'fr' ? 'Aucune catégorie trouvée' : 'No categories found'}
+              </h3>
               <p className="text-muted-foreground mb-6">
-                Try adjusting your search terms or remove filters
+                {language === 'ar' 
+                  ? 'جرب تعديل مصطلحات البحث أو إزالة الفلاتر'
+                  : language === 'fr'
+                  ? 'Essayez d\'ajuster vos termes de recherche ou de supprimer les filtres'
+                  : 'Try adjusting your search terms or remove filters'
+                }
               </p>
               <Button onClick={() => { setSearchQuery(''); setShowTrendingOnly(false); }}>
-                Clear Search
+                {language === 'ar' ? 'مسح البحث' : language === 'fr' ? 'Effacer la recherche' : 'Clear Search'}
               </Button>
             </div>
           ) : (
@@ -195,22 +227,22 @@ export default function Categories() {
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
                       
                       {/* Category Icon & Trending Badge */}
-                      <div className="absolute top-4 left-4 flex items-center space-x-2">
+                      <div className={`absolute top-4 flex items-center ${isRTL ? 'right-4 space-x-reverse space-x-2' : 'left-4 space-x-2'}`}>
                         <div className="text-2xl bg-white/90 rounded-lg p-2">
                           {category.icon}
                         </div>
                         {category.trending && (
                           <Badge className="bg-primary text-primary-foreground">
                             <TrendingUp className="w-3 h-3 mr-1" />
-                            Trending
+                            {language === 'ar' ? 'رائج' : language === 'fr' ? 'Tendance' : 'Trending'}
                           </Badge>
                         )}
                       </div>
                       
                       {/* Product Count */}
-                      <div className="absolute bottom-4 right-4">
+                      <div className={`absolute bottom-4 ${isRTL ? 'left-4' : 'right-4'}`}>
                         <Badge variant="secondary" className="bg-white/90 text-black">
-                          {category.productCount} products
+                          {category.productCount} {language === 'ar' ? 'منتج' : language === 'fr' ? 'produits' : 'products'}
                         </Badge>
                       </div>
                     </div>
@@ -220,7 +252,7 @@ export default function Categories() {
                     <div className="space-y-4">
                       <div>
                         <CardTitle className="text-xl group-hover:text-primary transition-colors">
-                          {category.name}
+                          {language === 'ar' ? t.categories[category.id as keyof typeof t.categories] : category.name}
                         </CardTitle>
                         <p className="text-muted-foreground text-sm mt-2">
                           {category.description}
@@ -230,7 +262,7 @@ export default function Categories() {
                       {/* Subcategories */}
                       <div className="space-y-2">
                         <div className="text-sm font-medium text-muted-foreground">
-                          Popular subcategories:
+                          {language === 'ar' ? 'فئات فرعية شائعة:' : language === 'fr' ? 'Sous-catégories populaires:' : 'Popular subcategories:'}
                         </div>
                         <div className="flex flex-wrap gap-1">
                           {category.subcategories.slice(0, 3).map((sub) => (
@@ -240,21 +272,21 @@ export default function Categories() {
                           ))}
                           {category.subcategories.length > 3 && (
                             <Badge variant="outline" className="text-xs">
-                              +{category.subcategories.length - 3} more
+                              +{category.subcategories.length - 3} {language === 'ar' ? 'أكثر' : language === 'fr' ? 'plus' : 'more'}
                             </Badge>
                           )}
                         </div>
                       </div>
 
-                      <div className="flex items-center justify-between pt-4">
-                        <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+                      <div className={`flex items-center justify-between pt-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                        <div className={`flex items-center ${isRTL ? 'space-x-reverse space-x-4' : 'space-x-4'} text-sm text-muted-foreground`}>
                           <div className="flex items-center">
                             <Star className="w-4 h-4 mr-1 fill-yellow-400 text-yellow-400" />
                             4.{Math.floor(Math.random() * 5) + 3}
                           </div>
                           <div className="flex items-center">
                             <Users className="w-4 h-4 mr-1" />
-                            {Math.floor(category.productCount / 10)}k+ sold
+                            {Math.floor(category.productCount / 10)}k+ {language === 'ar' ? 'مبيع' : language === 'fr' ? 'vendus' : 'sold'}
                           </div>
                         </div>
 
@@ -264,8 +296,8 @@ export default function Categories() {
                           onClick={() => handleCategoryClick(category.id)}
                         >
                           <Link to={`/products?category=${category.id}`}>
-                            Explore
-                            <ArrowRight className="w-4 h-4 ml-2" />
+                            {language === 'ar' ? 'استكشف' : language === 'fr' ? 'Explorer' : 'Explore'}
+                            <ArrowRight className={`w-4 h-4 ${isRTL ? 'mr-2' : 'ml-2'}`} />
                           </Link>
                         </Button>
                       </div>
@@ -283,34 +315,51 @@ export default function Categories() {
         <section className="py-16 bg-muted/30">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">Trending Categories</h2>
+              <h2 className="text-3xl font-bold mb-4">
+                {language === 'ar' ? 'الفئات الرائجة' : language === 'fr' ? 'Catégories tendances' : 'Trending Categories'}
+              </h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
-                Discover what's hot right now! These categories are seeing the most activity and customer interest.
+                {language === 'ar' 
+                  ? 'اكتشف ما هو رائج الآن! هذه الفئات تشهد أكبر نشاط واهتمام من العملاء.'
+                  : language === 'fr'
+                  ? 'Découvrez ce qui est tendance en ce moment ! Ces catégories connaissent le plus d\'activité et d\'intérêt client.'
+                  : 'Discover what\'s hot right now! These categories are seeing the most activity and customer interest.'
+                }
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {trendingCategories.map((category) => (
-                <Card key={category.id} className="group overflow-hidden hover:shadow-lg transition-all duration-300">
-                  <div className="relative h-32 overflow-hidden">
-                    <img
-                      src={categoryImages[category.id as keyof typeof categoryImages]}
-                      alt={category.name}
-                      className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                    <div className="absolute bottom-2 left-3 text-white">
-                      <div className="text-lg font-bold">{category.name}</div>
-                      <div className="text-sm opacity-90">{category.productCount} products</div>
+                <Link
+                  key={category.id}
+                  to={`/products?category=${category.id}`}
+                  onClick={() => handleCategoryClick(category.id)}
+                >
+                  <Card className="group overflow-hidden hover:shadow-lg transition-all duration-300 cursor-pointer">
+                    <div className="relative h-32 overflow-hidden">
+                      <img
+                        src={categoryImages[category.id as keyof typeof categoryImages]}
+                        alt={category.name}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                      <div className={`absolute bottom-2 text-white ${isRTL ? 'right-3' : 'left-3'}`}>
+                        <div className="text-lg font-bold">
+                          {language === 'ar' ? t.categories[category.id as keyof typeof t.categories] : category.name}
+                        </div>
+                        <div className="text-sm opacity-90">
+                          {category.productCount} {language === 'ar' ? 'منتج' : language === 'fr' ? 'produits' : 'products'}
+                        </div>
+                      </div>
+                      <div className={`absolute top-2 ${isRTL ? 'left-2' : 'right-2'}`}>
+                        <Badge className="bg-red-500 text-white">
+                          <TrendingUp className="w-3 h-3 mr-1" />
+                          {language === 'ar' ? 'حار' : language === 'fr' ? 'Chaud' : 'Hot'}
+                        </Badge>
+                      </div>
                     </div>
-                    <div className="absolute top-2 right-2">
-                      <Badge className="bg-red-500 text-white">
-                        <TrendingUp className="w-3 h-3 mr-1" />
-                        Hot
-                      </Badge>
-                    </div>
-                  </div>
-                </Card>
+                  </Card>
+                </Link>
               ))}
             </div>
           </div>
