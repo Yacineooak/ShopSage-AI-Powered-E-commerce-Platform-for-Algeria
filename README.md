@@ -3,6 +3,7 @@
 <div align="center">
 
 ![ShopSage Logo](https://via.placeholder.com/200x80/8B5CF6/FFFFFF?text=ShopSage)
+<img width="1024" height="1024" alt="ChatGPT Image 16 août 2025, 16_15_58" src="https://github.com/user-attachments/assets/8394cfc1-de72-4c71-8301-cfa73ff5f18b" />
 
 **A modern, multilingual e-commerce platform specifically designed for the Algerian market**
 
