@@ -40,6 +40,7 @@
 - **Wishlist Management**: Save and organize favorite products
 - **Shopping Cart**: Persistent cart with quantity management
 - **Responsive Design**: Optimized for mobile, tablet, and desktop
+<img width="1900" height="955" alt="7977779797" src="https://github.com/user-attachments/assets/205e6292-9a94-4f71-8c95-06b352739960" />
 
 ### 🎨 Modern UI/UX
 - **Beautiful Animations**: Framer Motion powered smooth transitions
@@ -47,6 +48,7 @@
 - **Professional Design**: Modern gradient-based design system
 - **Accessibility**: WCAG 2.1 compliant with screen reader support
 - **Fast Performance**: Optimized bundle size and lazy loading
+<img width="1901" height="952" alt="949444494" src="https://github.com/user-attachments/assets/56fb827b-9628-49c1-aa13-ad664f79d0d3" />
 
 ### 🔧 Technical Features
 - **TypeScript**: Full type safety throughout the application
@@ -55,6 +57,7 @@
 - **Responsive Images**: Optimized image loading with fallbacks
 - **SEO Optimized**: Meta tags and structured data
 - **PWA Ready**: Service worker and offline capabilities
+<img width="1901" height="952" alt="11949449494" src="https://github.com/user-attachments/assets/a9e66937-a48f-4dc5-9d94-0270ebe63946" />
 
 ## 🚀 Quick Start
 
