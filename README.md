@@ -302,15 +302,9 @@ CMD ["npm", "run", "preview"]
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🤝 Support
-
-### Community
-- **GitHub Issues**: [Report bugs and request features](https://github.com/username/shopsage/issues)
-- **Discussions**: [Join community discussions](https://github.com/username/shopsage/discussions)
-- **Discord**: [Join our Discord server](https://discord.gg/shopsage)
-
 ### Professional Support
 For enterprise support and custom development:
-- **Email**: support@shopsage.com
+- **Email**: stylebenderkh@gmail.com
 - **Website**: [www.shopsage.com](https://www.shopsage.com)
 
 ## 📈 Roadmap
